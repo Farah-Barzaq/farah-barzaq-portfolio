@@ -18,10 +18,7 @@ window.onscroll = () => {
     }
   });
 };
-// menuIcon.onclick = () => {
-//     menuIcon.classList.toggle("fa-bars");
-//     navBar.classList.toggle("active");
-// }
+
 const navbarToggle = document.querySelector(".navbar-toggle");
 const navbar = document.querySelector(".nav-bar");
 
@@ -30,47 +27,56 @@ navbarToggle.addEventListener("click", () => {
   navbar.classList.toggle("active");
 });
 
-// const sendEmail = (e) => {
-//   e.preventDefault(); // لمنع الصفحة من التحديث عند الضغط على الزر
+const typedText = document.querySelector(".text-animation span");
 
-//   // سحب البيانات من الحقول (تأكدي أن الـ ID مطابق لما في الـ HTML)
-//   const params = {
-//     full_name: document.getElementById("full_name").value,
-//     email: document.getElementById("email").value,
-//     phone_number: document.getElementById("phone_number").value,
-//     message: document.getElementById("message").value,
-//   };
+if (typedText) {
+  const words = ["WEB DEVELOPER", "FRONT-END DEVELOPER"];
+  let wordIndex = 0;
+  let charIndex = 0;
+  let deleting = false;
 
-//   const serviceID = "service_75pdwq8"; // تجدينه في Email Services
-//   const templateID = "template_44lshiu"; // تجدينه في Email Templates
+  const typeLoop = () => {
+    const currentWord = words[wordIndex];
 
-//   emailjs.send(serviceID, templateID, params)
-//     .then(res => {
-//         // إذا نجح الاختبار
-//         alert("تم الإرسال بنجاح! تفحصي بريدك الآن.");
-//         console.log(res);
-//     })
-//     .catch(err => {
-//         // إذا فشل (سيظهر لكِ السبب في الـ Console)
-//         console.error("فشل الإرسال:", err);
-//     });
-// };
+    if (!deleting) {
+      charIndex++;
+      typedText.textContent = currentWord.slice(0, charIndex);
+
+      if (charIndex === currentWord.length) {
+        deleting = true;
+        setTimeout(typeLoop, 1200);
+        return;
+      }
+    } else {
+      charIndex--;
+      typedText.textContent = currentWord.slice(0, charIndex);
+
+      if (charIndex === 0) {
+        deleting = false;
+        wordIndex = (wordIndex + 1) % words.length;
+      }
+    }
+
+    const speed = deleting ? 90 : 150;
+    setTimeout(typeLoop, speed);
+  };
+
+  typeLoop();
+}
+
 const sendEmail = (e) => {
   e.preventDefault(); 
 
-  // 1. سحب البيانات
   const full_name = document.getElementById("full_name").value.trim();
   const email = document.getElementById("email").value.trim();
   const phone_number = document.getElementById("phone_number").value.trim();
   const message = document.getElementById("message").value.trim();
 
-  // 2. التحقق من أن الحقول ليست فارغة
   if (full_name === "" || email === "" || phone_number === "" || message === "") {
-    alert("يرجى ملء جميع الحقول المطلوبة قبل الإرسال!");
-    return; // التوقف عن الإكمال في حال وجود حقل فارغ
+    alert("please fill in all fields before sending the message.");
+    return; 
   }
 
-  // 3. إكمال عملية الإرسال إذا كانت البيانات موجودة
   const params = {
     full_name: full_name,
     email: email,
@@ -83,13 +89,10 @@ const sendEmail = (e) => {
 
   emailjs.send(serviceID, templateID, params)
     .then(res => {
-        alert("تم الإرسال بنجاح!");
+        alert("Message sent successfully!");
         document.querySelector("form").reset();
     })
     .catch(err => {
-        console.error("فشل الإرسال:", err);
+        console.error("Failed to send message:", err);
     });
 };
-// function changeMode() {
-//   document.body.classList.toggle("light-mode");
-// }
