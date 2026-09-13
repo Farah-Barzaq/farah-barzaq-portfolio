@@ -291,7 +291,8 @@ span {
 .skills {
   /* padding: 100px 150px; */
   background-color: var(--second-bg-color);
-  max-height: 100vh;
+  min-height: auto;
+  max-height: none;
 }
 
 .skills-items {
